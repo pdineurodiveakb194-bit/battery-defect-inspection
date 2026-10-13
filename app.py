@@ -13,6 +13,8 @@ import torch.nn.functional as F
 from torchvision import transforms
 import matplotlib.cm as cm
 import os
+from pathlib import Path
+import gdown
 
 # ============================================================
 # 基本設定
@@ -163,40 +165,72 @@ def create_convnext_model():
     return model
 
 @st.cache_resource
-def load_models(device_type):
-    model_300 = create_convnext_model()
 
-    checkpoint_300 = torch.load(
-        "/content/drive/MyDrive/"
-        "Battery_Electrode_Coating_defect_Dataset/"
-        "models/convnext_tiny_a1*_0_final_best1.pth",
-        map_location=device_type
+# Google Driveからモデルをダウンロードする保存先
+MODEL_DIR = Path("/tmp/battery_defect_models")
+MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def download_model(file_id, filename):
+    """Google Driveからモデルをダウンロードする"""
+    model_path = MODEL_DIR / filename
+
+    if not model_path.exists() or model_path.stat().st_size == 0:
+        if model_path.exists():
+            model_path.unlink()
+
+        result = gdown.download(
+            id=file_id,
+            output=str(model_path),
+            quiet=False
+        )
+
+        if result is None or not model_path.exists():
+            raise RuntimeError(
+                f"モデルをダウンロードできませんでした: {filename}。"
+                "Google Driveの共有設定を確認してください。"
+            )
+
+    return str(model_path)
+
+
+def load_models(device_type):
+    # 300×300用モデル
+    model_300_path = download_model(
+        "1RLUv0yegdmIxavAoYZPz2VF5unEal6Hv",
+        "convnext_tiny_a1_model.pth"
     )
 
+    model_300 = create_convnext_model()
+    checkpoint_300 = torch.load(
+        model_300_path,
+        map_location=device_type
+    )
     model_300.load_state_dict(
         checkpoint_300["model_state_dict"]
     )
-
     model_300.to(device_type)
     model_300.eval()
 
-    model_224 = create_convnext_model()
-
-    checkpoint_224 = torch.load(
-        "/content/drive/MyDrive/"
-        "Battery_Electrode_Coating_defect_Dataset/"
-        "models/convnext_tiny_b2_0_final_best1.pth",
-        map_location=device_type
+    # 224×224用モデル
+    model_224_path = download_model(
+        "1ySyDV0EbiYVr6ydDFRlaBq8_fR5CRWUr",
+        "convnext_tiny_b2_model.pth"
     )
 
+    model_224 = create_convnext_model()
+    checkpoint_224 = torch.load(
+        model_224_path,
+        map_location=device_type
+    )
     model_224.load_state_dict(
         checkpoint_224["model_state_dict"]
     )
-
     model_224.to(device_type)
     model_224.eval()
 
     return model_300, model_224
+
 
 model_300, model_224 = load_models(str(device))
 
