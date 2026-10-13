@@ -1,0 +1,17 @@
+
+streamlit
+torch
+torchvision
+pandas
+numpy
+Pillow
+matplotlib
+Image
+import product
+io
+zipfile
+torch.nn
+models
+torch.nn.functional
+transforms
+os
