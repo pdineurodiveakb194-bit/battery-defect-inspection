@@ -7,7 +7,6 @@ numpy
 Pillow
 matplotlib
 Image
-import product
 io
 zipfile
 torch.nn
