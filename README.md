@@ -1,0 +1,1 @@
+# battery-defect-inspection
