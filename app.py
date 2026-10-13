@@ -164,13 +164,11 @@ def create_convnext_model():
 
     return model
 
-@st.cache_resource
-
 # Google Driveからモデルをダウンロードする保存先
 MODEL_DIR = Path("/tmp/battery_defect_models")
 MODEL_DIR.mkdir(parents=True, exist_ok=True)
 
-
+@st.cache_resource
 def download_model(file_id, filename):
     """Google Driveからモデルをダウンロードする"""
     model_path = MODEL_DIR / filename
