@@ -5,6 +5,7 @@ import numpy as np
 from PIL import Image
 from itertools import product
 import io
+import tempfile
 import zipfile
 import torch
 import torch.nn as nn
@@ -1315,9 +1316,6 @@ def create_heatmap_zip(
         "class" : クラスごとにフォルダ分け
     """
 
-    zip_buffer = io.BytesIO()
-
-    # クラス名とモデルへのtarget_classの対応
     class_names = [
         "割れ",
         "剥離",
@@ -1332,82 +1330,78 @@ def create_heatmap_zip(
         "other"
     ]
 
-    with zipfile.ZipFile(
-        zip_buffer,
-        mode="w",
-        compression=zipfile.ZIP_DEFLATED
-    ) as zip_file:
+    # ZIPファイルを一時ファイル上に作成
+    with tempfile.TemporaryFile(mode="w+b") as zip_buffer:
 
-        for result in results:
+        with zipfile.ZipFile(
+            zip_buffer,
+            mode="w",
+            compression=zipfile.ZIP_DEFLATED
+        ) as zip_file:
 
-            image = result["image"]
-            filename = result["filename"]
+            for result in results:
 
-            # 拡張子を除いた画像名
-            image_stem = os.path.splitext(filename)[0]
+                filename = result["filename"]
+                image_stem = os.path.splitext(filename)[0]
+                pattern = result["pattern"]
 
-            # 画像の判定結果
-            pattern = result["pattern"]
+                # 対象クラスを決定
+                if target_mode == "threshold":
 
-            # -----------------------------------------
-            # 対象クラスを決定
-            # -----------------------------------------
-            if target_mode == "threshold":
-
-                target_classes = [
-                    i
-                    for i, key in enumerate(class_keys)
-                    if pattern[key]
-                ]
-
-            else:
-                # すべてのクラス
-                target_classes = list(range(4))
-
-            # -----------------------------------------
-            # 対象クラスのGrad-CAMを生成
-            # -----------------------------------------
-            # 同じ画像のGrad-CAMは1回だけ生成する
-            gradcam_images = None
-            
-            if target_classes:
-                gradcam_images = get_gradcam_images(result)
-
-            for target_class in target_classes:
-                class_name = class_names[target_class]
-                heatmap_image = gradcam_images[target_class]
-
-                # PNG形式のバイトデータに変換
-                image_bytes = pil_image_to_bytes(
-                    heatmap_image
-                )
-
-                # -----------------------------------------
-                # ZIP内の保存先を決定
-                # -----------------------------------------
-                if folder_mode == "image":
-
-                    # 画像ごとにフォルダ分け
-                    zip_path = (
-                        f"{image_stem}/"
-                        f"{class_name}.png"
-                    )
+                    target_classes = [
+                        i
+                        for i, key in enumerate(class_keys)
+                        if pattern[key]
+                    ]
 
                 else:
+                    target_classes = list(range(4))
 
-                    # クラスごとにフォルダ分け
-                    zip_path = (
-                        f"{class_name}/"
-                        f"{image_stem}.png"
+                # 対象クラスがなければ次の画像へ
+                if not target_classes:
+                    continue
+
+                # この画像のGrad-CAMを1回だけ生成
+                gradcam_images = get_gradcam_images(result)
+
+                for target_class in target_classes:
+
+                    class_name = class_names[target_class]
+                    heatmap_image = gradcam_images[target_class]
+
+                    # PNG形式のバイトデータに変換
+                    image_bytes = pil_image_to_bytes(
+                        heatmap_image
                     )
 
-                # ZIPに追加
-                zip_file.writestr(
-                    zip_path,
-                    image_bytes
-                )
+                    # ZIP内の保存先を決定
+                    if folder_mode == "image":
+                        zip_path = (
+                            f"{image_stem}/"
+                            f"{class_name}.png"
+                        )
+                    else:
+                        zip_path = (
+                            f"{class_name}/"
+                            f"{image_stem}.png"
+                        )
 
-    return zip_buffer.getvalue()
+                    # ZIPに追加
+                    zip_file.writestr(
+                        zip_path,
+                        image_bytes
+                    )
+
+                    del image_bytes
+
+                # この画像のヒートマップへの参照を解放
+                del gradcam_images
+
+        # ZIP作成完了後、先頭から読み込む
+        zip_buffer.seek(0)
+        zip_bytes = zip_buffer.read()
+
+    return zip_bytes
 
 # ============================================================
 # ページ切り替え
