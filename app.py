@@ -1371,12 +1371,14 @@ def create_heatmap_zip(
             # -----------------------------------------
             # 対象クラスのGrad-CAMを生成
             # -----------------------------------------
-            for target_class in target_classes:
-
-                class_name = class_names[target_class]
-
-                # 生成済みGrad-CAMを再利用
+            # 同じ画像のGrad-CAMは1回だけ生成する
+            gradcam_images = None
+            
+            if target_classes:
                 gradcam_images = get_gradcam_images(result)
+
+            for target_class in target_classes:
+                class_name = class_names[target_class]
                 heatmap_image = gradcam_images[target_class]
 
                 # PNG形式のバイトデータに変換
