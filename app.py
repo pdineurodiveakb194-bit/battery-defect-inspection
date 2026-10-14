@@ -12,6 +12,7 @@ from torchvision import models
 import torch.nn.functional as F
 from torchvision import transforms
 import matplotlib
+from matplotlib import colormaps
 import matplotlib.cm as cm
 import os
 from pathlib import Path
@@ -984,7 +985,7 @@ def overlay_gradcam(image, cam, alpha=0.45):
     ) / 255.0
 
     # Jetカラーマップを適用
-    heatmap = cm.get_cmap("jet")(cam_array)
+    heatmap = colormaps["jet"](cam_array)
 
     # RGBのみ取り出して0～255に変換
     heatmap = np.uint8(
