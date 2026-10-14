@@ -11,6 +11,7 @@ import torch.nn as nn
 from torchvision import models
 import torch.nn.functional as F
 from torchvision import transforms
+import matplotlib
 import matplotlib.cm as cm
 import os
 from pathlib import Path
