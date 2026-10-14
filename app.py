@@ -438,38 +438,34 @@ def home_page():
 
     with col1:
 
-        crack = st.slider(
+        crack = st.select_slider(
             "割れ",
-            0.25,
-            0.75,
-            st.session_state.thresholds["crack"],
-            0.25
+            options=[0.25, 0.5, 0.75],
+            value=0.5,
+            format_func=lambda x: f"{x:.2f}"
         )
 
-        delamination = st.slider(
+        delamination = st.select_slider(
             "剥離",
-            0.25,
-            0.75,
-            st.session_state.thresholds["delamination"],
-            0.25
+            options=[0.25, 0.5, 0.75],
+            value=0.5,
+            format_func=lambda x: f"{x:.2f}"
         )
 
     with col2:
 
-        pinhole = st.slider(
+        pinhole = st.select_slider(
             "ピンホール",
-            0.25,
-            0.75,
-            st.session_state.thresholds["pinhole"],
-            0.25
+            options=[0.25, 0.5, 0.75],
+            value=0.5,
+            format_func=lambda x: f"{x:.2f}"
         )
 
-        other = st.slider(
+        other = st.select_slider(
             "その他の欠陥",
-            0.25,
-            0.75,
-            st.session_state.thresholds["other"],
-            0.25
+            options=[0.25, 0.5, 0.75],
+            value=0.5,
+            format_func=lambda x: f"{x:.2f}"
         )
 
     # 閾値を保存
