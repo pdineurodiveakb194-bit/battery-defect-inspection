@@ -448,7 +448,7 @@ def home_page():
 
         delamination = st.select_slider(
             "剥離",
-            options=[0.075, 0.395, 0.515],
+            options=[0.185, 0.395, 0.515],
             value=0.395,
             format_func=lambda x: f"{x:.2f}"
         )
@@ -457,7 +457,7 @@ def home_page():
 
         pinhole = st.select_slider(
             "ピンホール",
-            options=[0.5, 0.635, 0.9],
+            options=[0.415, 0.635, 0.9],
             value=0.635,
             format_func=lambda x: f"{x:.2f}"
         )
