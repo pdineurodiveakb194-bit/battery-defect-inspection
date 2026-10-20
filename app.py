@@ -81,10 +81,10 @@ def initialize_state():
 
         # 閾値
         "thresholds": {
-            "crack": 0.50,
-            "delamination": 0.50,
-            "pinhole": 0.50,
-            "other": 0.50,
+            "crack": 0.395,
+            "delamination": 0.395,
+            "pinhole": 0.635,
+            "other": 0.41,
         },
 
         # 表示条件
@@ -441,15 +441,15 @@ def home_page():
 
         crack = st.select_slider(
             "割れ",
-            options=[0.25, 0.5, 0.75],
-            value=0.5,
+            options=[0.105, 0.395, 0.955],
+            value=0.395,
             format_func=lambda x: f"{x:.2f}"
         )
 
         delamination = st.select_slider(
             "剥離",
-            options=[0.25, 0.5, 0.75],
-            value=0.5,
+            options=[0.075, 0.395, 0.515],
+            value=0.395,
             format_func=lambda x: f"{x:.2f}"
         )
 
@@ -457,15 +457,15 @@ def home_page():
 
         pinhole = st.select_slider(
             "ピンホール",
-            options=[0.25, 0.5, 0.75],
-            value=0.5,
+            options=[0.5, 0.635, 0.9],
+            value=0.635,
             format_func=lambda x: f"{x:.2f}"
         )
 
         other = st.select_slider(
             "その他の欠陥",
-            options=[0.25, 0.5, 0.75],
-            value=0.5,
+            options=[0.205, 0.41, 0.8],
+            value=0.41,
             format_func=lambda x: f"{x:.2f}"
         )
 
