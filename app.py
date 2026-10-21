@@ -448,7 +448,7 @@ def home_page():
 
         delamination = st.select_slider(
             "剥離",
-            options=[0.185, 0.395, 0.515],
+            options=[0.125, 0.395, 0.665],
             value=0.395,
             format_func=lambda x: f"{x:.2f}"
         )
