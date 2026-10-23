@@ -453,7 +453,7 @@ def home_page():
         pinhole = st.select_slider(
             "ピンホール",
             options=[0.415, 0.635, 0.900],
-            value=0.395,
+            value=0.635,
             format_func=lambda x: {
                 0.415: "見逃し少なめ(0.415)",
                 0.635: "標準(0.635)",
