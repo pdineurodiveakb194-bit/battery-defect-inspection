@@ -434,7 +434,15 @@ def home_page():
     # ========================================================
 
     st.subheader("② 欠陥判定の閾値設定")
-
+    
+    st.markdown("""
+    <style>
+    div[data-testid="stSelectSlider"] [data-testid="stTickBar"] {
+        display: none;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
     col1, col2 = st.columns(2)
 
     with col1:
