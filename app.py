@@ -437,9 +437,8 @@ def home_page():
     
     st.markdown("""
     <style>
-    /* スライダ下側の両端に表示されるラベルを非表示 */
-    div[data-testid="stSelectSlider"] [data-testid="stTickBar"] > div:first-child,
-    div[data-testid="stSelectSlider"] [data-testid="stTickBar"] > div:last-child {
+    /* スライダの目盛りラベルを非表示 */
+    div[data-testid="stSelectSlider"] [data-testid="stTickBar"] {
         display: none !important;
     }
     </style>
