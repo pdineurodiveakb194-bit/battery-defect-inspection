@@ -443,30 +443,46 @@ def home_page():
             "割れ",
             options=[0.105, 0.395, 0.955],
             value=0.395,
-            format_func=lambda x: f"{x:.2f}"
+            format_func=lambda x: {
+                0.105: "見逃し少なめ(0.105)"
+                0.395: "標準(0.395)"
+                0.955: "誤認少なめ(0.955)"
+                }[x]
         )
 
         delamination = st.select_slider(
-            "剥離",
-            options=[0.125, 0.395, 0.665],
+            "ピンホール",
+            options=[0.415, 0.635, 0.900],
             value=0.395,
-            format_func=lambda x: f"{x:.2f}"
+            format_func=lambda x: {
+                0.415: "見逃し少なめ(0.415)"
+                0.635: "標準(0.635)"
+                0.9: "誤認少なめ(0.900)"
+                }[x]
         )
 
     with col2:
 
         pinhole = st.select_slider(
-            "ピンホール",
-            options=[0.415, 0.635, 0.9],
-            value=0.635,
-            format_func=lambda x: f"{x:.2f}"
+            "剥離",
+            options=[0.125, 0.395, 0.665],
+            value=0.395,
+            format_func=lambda x: {
+                0.125: "見逃し少なめ(0.125)"
+                0.395: "標準(0.395)"
+                0.665: "誤認少なめ(0.665)"
+                }[x]
         )
 
         other = st.select_slider(
             "その他の欠陥",
             options=[0.205, 0.41, 0.8],
             value=0.41,
-            format_func=lambda x: f"{x:.2f}"
+            format_func=lambda x: {
+                0.205: "見逃し少なめ(0.205)"
+                0.41: "標準(0.410)"
+                0.8: "誤認少なめ(0.800)"
+                }[x]
         )
 
     # 閾値を保存
