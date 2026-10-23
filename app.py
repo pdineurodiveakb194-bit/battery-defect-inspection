@@ -450,7 +450,7 @@ def home_page():
                 }[x]
         )
 
-        delamination = st.select_slider(
+        pinhole = st.select_slider(
             "ピンホール",
             options=[0.415, 0.635, 0.900],
             value=0.395,
@@ -463,7 +463,7 @@ def home_page():
 
     with col2:
 
-        pinhole = st.select_slider(
+        delamination = st.select_slider(
             "剥離",
             options=[0.125, 0.395, 0.665],
             value=0.395,
