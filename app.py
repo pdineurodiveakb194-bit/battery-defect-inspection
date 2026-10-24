@@ -194,7 +194,7 @@ def download_model(file_id, filename):
 
     return str(model_path)
 
-
+@st.cache_resource
 def load_models(device_type):
     # 300×300用モデル
     model_300_path = download_model(
